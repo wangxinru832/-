@@ -9,6 +9,8 @@ private:
 	int moveDir;//怪物移动方向
 	int moveTimer;//移动计时器，控制移动速度
 public:
+	
+
 	int hp;
 	Monster(int startX, int startY);
 	int getX() const;
@@ -18,6 +20,13 @@ public:
 	//绘制怪物，死亡则不绘制
 	void draw();
 	void takeDamage(int damage);
+
+	// 加载BOSS图片
+	void LoadBossImage();
+	// 绘制BOSS
+	void DrawBoss();
+	// 玩家用剑攻击判定BOSS
+	void SwordHitBoss();
 };
 
 //判断玩家是否与怪物发生碰撞（是否处于同一个格子上）

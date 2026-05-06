@@ -62,10 +62,10 @@ void Map::generateFromImage() {
 
 	data[4][12] = WALL; data[4][14] = WALL; data[6][16] = WALL; data[7][16] = WALL;
 
-	data[10][8] = WALL;
+	data[10][8] = WALL; data[14][23] = WALL; data[7][23] = WALL;
 	data[11][8] = WALL;
 	data[11][10] = WALL;
-	data[12][12] = WALL;
+	data[11][7] = WALL;
 	data[13][14] = WALL;
 
 	data[7][22] = WALL;
@@ -101,6 +101,12 @@ void Map::generateFromImage() {
 	data[10][37] = WALL; data[11][36] = WALL; data[11][37] = WALL;
 }
 
+void Map::loadWallImage() {
+	// 加载 35×35 墙体贴图，只加载一次
+	loadimage(&imgWall, _T("wall.png"), CELL, CELL);
+	// 加载地板 35×35
+	loadimage(&imgFloor, _T("floor.png"), CELL, CELL);
+}
 //绘制地图
 void Map::draw() {
 	for (int y = 0; y < 20; y++) {
@@ -108,15 +114,9 @@ void Map::draw() {
 			int px = x * CELL;
 			int py = y * CELL;
 			//绘制地板底色
-			setfillcolor(RGB(240, 210, 150));
-			setlinecolor(RGB(180, 140, 80));
-			solidrectangle(px, py, px + CELL, py + CELL);
-			rectangle(px, py, px + CELL, py + CELL);
+			putimage(px, py, &imgFloor);
 			if (data[y][x] == WALL) {
-				setfillcolor(RGB(100, 60, 30));
-				setlinecolor(RGB(60, 30, 10));
-				solidrectangle(px + 2, py + 2, px + CELL - 2, py + CELL - 2);
-				rectangle(px, py, px + CELL, py + CELL);
+				putimage(px, py, &imgWall);
 			}
 		}
 	}

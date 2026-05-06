@@ -19,6 +19,8 @@ int main() {
 	setbkmode(TRANSPARENT);
 
 	Map map;//创建地图对象
+	map.loadWallImage();
+
 	initChests();//初始化5个宝箱的位置和图片
 	initSwords();//初始化10把剑的位置和图片
 	//生成地图
@@ -128,11 +130,11 @@ int main() {
 		updateChests(player);
 		//更新玩家受伤冷却（防止连续掉血）
 		player.updateCD();
-		//碰到任意一只怪兽，掉血15个点
-		if (isCollide(player, m1))player.hurt(15);
-		if (isCollide(player, m2))player.hurt(15);
-		if (isCollide(player, m3))player.hurt(15);
-		if (isCollide(player, m4))player.hurt(15);
+		//碰到任意一只怪兽，掉血10个点
+		if (isCollide(player, m1))player.hurt(10);
+		if (isCollide(player, m2))player.hurt(10);
+		if (isCollide(player, m3))player.hurt(10);
+		if (isCollide(player, m4))player.hurt(10);
 
 		//绘制剑+检测玩家是否捡剑
 		drawSwords();
@@ -166,7 +168,7 @@ int main() {
 				else
 				{
 					if (touchTimer >= 38) {
-						player.hurt(15);//玩家掉15滴血
+						player.hurt(10);//玩家掉10滴血
 						touchTimer = 0;//重置时间
 					}
 				}

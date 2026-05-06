@@ -5,7 +5,12 @@
 class Map {
 private:
     char data[20][40];
+    IMAGE imgWall;
+    IMAGE imgFloor;
 public:
+    //加载图片
+    void loadWallImage();
+
     //生成地图围墙和内部迷宫
     void generateFromImage();
     void draw();

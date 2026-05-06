@@ -57,6 +57,12 @@ void Monster::takeDamage(int damage) {
 	hp -= damage;
 	if (hp <= 0)hp = 0;
 }
+
+
+
+
+
+
 //判断玩家与怪物是否发生碰撞
 bool isCollide(Player& p, Monster& m) {
 	return(p.getX() == m.getX() && p.getY() == m.getY());
