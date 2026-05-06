@@ -1,4 +1,4 @@
-#include "game.h"
+ï»¿#include "game.h"
 #include "map.h"
 #include "player.h"
 #include "monster.h"
@@ -7,33 +7,33 @@
 #include "ui.h"
 
 int main() {
-	//´´½¨ÓÎÏ·´°¿Ú
+	//åˆ›å»ºæ¸¸æˆçª—å£
 	initgraph(SCREEN_W, SCREEN_H);
-	//¼ÓÔØÓÎÏ·Ê¤Àû½çÃæÍ¼Æ¬
+	//åŠ è½½æ¸¸æˆèƒœåˆ©ç•Œé¢å›¾ç‰‡
 	loadimage(&winImg, _T("win.png"), SCREEN_W, SCREEN_H);
-	//¼ÓÔØÓÎÏ·Ê§°Ü½çÃæÍ¼Æ¬
+	//åŠ è½½æ¸¸æˆå¤±è´¥ç•Œé¢å›¾ç‰‡
 	loadimage(&loseImg, _T("lose.png"), SCREEN_W, SCREEN_H);
 
 	BeginBatchDraw();
-	setfont(24, 0, _T("Consolas"));//ÉèÖÃ×ÖÌå
+	setfont(24, 0, _T("Consolas"));//è®¾ç½®å­—ä½“
 	setbkmode(TRANSPARENT);
 
-	Map map;//´´½¨µØÍ¼¶ÔÏó
-	initChests();//³õÊ¼»¯5¸ö±¦ÏäµÄÎ»ÖÃºÍÍ¼Æ¬
-	initSwords();//³õÊ¼»¯10°Ñ½£µÄÎ»ÖÃºÍÍ¼Æ¬
-	//Éú³ÉµØÍ¼
+	Map map;//åˆ›å»ºåœ°å›¾å¯¹è±¡
+	initChests();//åˆå§‹åŒ–5ä¸ªå®ç®±çš„ä½ç½®å’Œå›¾ç‰‡
+	initSwords();//åˆå§‹åŒ–10æŠŠå‰‘çš„ä½ç½®å’Œå›¾ç‰‡
+	//ç”Ÿæˆåœ°å›¾
 	map.generateFromImage();
 	Player player;
 
-	//´´½¨¹¥»÷ÌØĞ§¶ÔÏó
+	//åˆ›å»ºæ”»å‡»ç‰¹æ•ˆå¯¹è±¡
 	AttackEffect atkEffect;
 
-	//ÉèÖÃ°´Å¥£¬ÓÎÏ·¹æÔò
+	//è®¾ç½®æŒ‰é’®ï¼Œæ¸¸æˆè§„åˆ™
 	UI gameUI;
 
-	//ÉèÖÃËæ»úÊıÖÖ×Ó£¬±£Ö¤¹ÖÎïÃ¿´ÎÒÆ¶¯²»Ò»Ñù
+	//è®¾ç½®éšæœºæ•°ç§å­ï¼Œä¿è¯æ€ªç‰©æ¯æ¬¡ç§»åŠ¨ä¸ä¸€æ ·
 	srand((unsigned int)time(NULL));
-	//´´½¨4Ö»¹ÖÎï
+	//åˆ›å»º4åªæ€ªç‰©
 	Monster m1(8, 7);
 	Monster m2(30, 6);
 	Monster m3(12, 14);
@@ -41,13 +41,43 @@ int main() {
 
 	bool gameOver = false;
 
-	//ÓÎÏ·Ö÷Ñ­»·
+	UI ui;
+
+	//æ¸¸æˆä¸»å¾ªç¯
 	while (!gameOver) {
+		cleardevice();
+
+		if (!ui.isGameStart)
+		{
+			// è°ƒç”¨åˆ†è£…çš„å¼€å§‹ç•Œé¢
+			ui.DrawStartPage();
+			// æ£€æµ‹é¼ æ ‡ç‚¹å‡»
+			if (MouseHit())
+			{
+				MOUSEMSG m = GetMouseMsg();
+				if (m.uMsg == WM_LBUTTONDOWN)
+				{
+					// æ–‡å­—åæ ‡ï¼ˆå’Œ DrawStartPage é‡Œå®Œå…¨ä¸€æ ·ï¼‰
+					int tx = SCREEN_W / 2 - 100;
+					int ty = SCREEN_H / 2 - 30;
+
+					// åªæœ‰ç‚¹å‡»æ–‡å­—åŒºåŸŸæ‰è¿›å…¥æ¸¸æˆ
+					if (m.x >= tx && m.x <= tx + 220 &&
+						m.y >= ty && m.y <= ty + 70)
+					{
+						ui.isGameStart = true;
+					}
+				}
+			}
+		}
+		else
+		{
+
 
 		if (gameUI.isShowRule()) {
 			cleardevice();
 			gameUI.drawRule();
-			//°´ESC¼ü¹Ø±Õ¹æÔò
+			//æŒ‰ESCé”®å…³é—­è§„åˆ™
 			if (GetAsyncKeyState(VK_ESCAPE) & 1) {
 				gameUI.toggleRule();
 				Sleep(200);
@@ -56,28 +86,28 @@ int main() {
 			continue;
 		}
 
-		//ËÄÖ»¹ÖÎïÈ«ËÀÔòÓÎÏ·½áÊø
+		//å››åªæ€ªç‰©å…¨æ­»åˆ™æ¸¸æˆç»“æŸ
 		if (!isWin && checkALLMonsterDead(m1, m2, m3, m4)) {
 			isWin = true;
 		}
-		//Èç¹ûÓÎÏ·Ê¤ÀûµÄ»°£¬Ö±½Ó»æÖÆÓÎÏ·Ê¤ÀûµÄ½çÃæ£¬²»ÔÙ×ßÓÎÏ·½çÃæ
+		//å¦‚æœæ¸¸æˆèƒœåˆ©çš„è¯ï¼Œç›´æ¥ç»˜åˆ¶æ¸¸æˆèƒœåˆ©çš„ç•Œé¢ï¼Œä¸å†èµ°æ¸¸æˆç•Œé¢
 		if (isWin) {
 			cleardevice();
-			//»æÖÆÊ¤Àû»­Ãæ
+			//ç»˜åˆ¶èƒœåˆ©ç”»é¢
 			putimage(0, 0, &winImg);
 			FlushBatchDraw();
 
-			//Ö»ÓĞ°´ESC¼ü²Å»áÍË³öÓÎÏ·
+			//åªæœ‰æŒ‰ESCé”®æ‰ä¼šé€€å‡ºæ¸¸æˆ
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				gameOver = true;
 			}
 			continue;
 		}
 
-		//Èç¹ûÓÎÏ·Ê§°ÜµÄ»°£¬Ö±½Ó»æÖÆÓÎÏ·Ê§°ÜµÄ½çÃæ
+		//å¦‚æœæ¸¸æˆå¤±è´¥çš„è¯ï¼Œç›´æ¥ç»˜åˆ¶æ¸¸æˆå¤±è´¥çš„ç•Œé¢
 		if (isLose) {
 			cleardevice();
-			//»æÖÆÊ§°ÜÍ¼Æ¬
+			//ç»˜åˆ¶å¤±è´¥å›¾ç‰‡
 			putimage(0, 0, &loseImg);
 			FlushBatchDraw();
 			continue;
@@ -87,57 +117,57 @@ int main() {
 		map.draw();
 		player.draw();
 
-		//4Ö»¹ÖÎïµÄÒÆ¶¯+»æÖÆ
+		//4åªæ€ªç‰©çš„ç§»åŠ¨+ç»˜åˆ¶
 		m1.move(map); m1.draw();
 		m2.move(map); m2.draw();
 		m3.move(map); m3.draw();
 		m4.move(map); m4.draw();
 
-		//»æÖÆ±¦Ïä+¼ì²éÍæ¼ÒÊÇ·ñÅöµ½±¦Ïä
+		//ç»˜åˆ¶å®ç®±+æ£€æŸ¥ç©å®¶æ˜¯å¦ç¢°åˆ°å®ç®±
 		drawChests();
 		updateChests(player);
-		//¸üĞÂÍæ¼ÒÊÜÉËÀäÈ´£¨·ÀÖ¹Á¬ĞøµôÑª£©
+		//æ›´æ–°ç©å®¶å—ä¼¤å†·å´ï¼ˆé˜²æ­¢è¿ç»­æ‰è¡€ï¼‰
 		player.updateCD();
-		//Åöµ½ÈÎÒâÒ»Ö»¹ÖÊŞ£¬µôÑª15¸öµã
+		//ç¢°åˆ°ä»»æ„ä¸€åªæ€ªå…½ï¼Œæ‰è¡€15ä¸ªç‚¹
 		if (isCollide(player, m1))player.hurt(15);
 		if (isCollide(player, m2))player.hurt(15);
 		if (isCollide(player, m3))player.hurt(15);
 		if (isCollide(player, m4))player.hurt(15);
 
-		//»æÖÆ½£+¼ì²âÍæ¼ÒÊÇ·ñ¼ñ½£
+		//ç»˜åˆ¶å‰‘+æ£€æµ‹ç©å®¶æ˜¯å¦æ¡å‰‘
 		drawSwords();
 		updateSwords(player);
 
-		//¸üĞÂ²¢»æÖÆ¹¥»÷ÌØĞ§
+		//æ›´æ–°å¹¶ç»˜åˆ¶æ”»å‡»ç‰¹æ•ˆ
 		atkEffect.update();
 		atkEffect.draw();
 
 
-		//¶¨Òå¹¥»÷¹ÖÎïº¯Êı
+		//å®šä¹‰æ”»å‡»æ€ªç‰©å‡½æ•°
 		auto attackMonster = [&](Monster& m) {
-			//ÅĞ¶ÏÍæ¼ÒÓë¹ÖÎïÊÇ·ñ·¢ÉúÅö×²
+			//åˆ¤æ–­ç©å®¶ä¸æ€ªç‰©æ˜¯å¦å‘ç”Ÿç¢°æ’
 			if (player.getX() == m.getX() && player.getY() == m.getY())
 			{
 				touchTimer++;
-				//°´¿Õ¸ñ¼ü½øĞĞ¹¥»÷£¡
+				//æŒ‰ç©ºæ ¼é”®è¿›è¡Œæ”»å‡»ï¼
 				if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 				{
 					if (playerSword > 0) {
-						m.takeDamage(5);//¹ÖÎïµô5µÎÑª
+						m.takeDamage(5);//æ€ªç‰©æ‰5æ»´è¡€
 						playerSword--;
-						touchTimer = 0;//ÖØÖÃ½Ó´¥¼ÆÊ±
-						Sleep(200);//·ÀÖ¹Á¬Ğø¹¥»÷
+						touchTimer = 0;//é‡ç½®æ¥è§¦è®¡æ—¶
+						Sleep(200);//é˜²æ­¢è¿ç»­æ”»å‡»
 
-						//²¥·Å¹¥»÷¶ÔÏó
+						//æ’­æ”¾æ”»å‡»å¯¹è±¡
 						atkEffect.play();
 					}
 				}
-				//Èç¹û1.5Ãëºó²»¹¥»÷ÔòÍæ¼ÒµôÑª
+				//å¦‚æœ1.5ç§’åä¸æ”»å‡»åˆ™ç©å®¶æ‰è¡€
 				else
 				{
 					if (touchTimer >= 38) {
-						player.hurt(15);//Íæ¼Òµô15µÎÑª
-						touchTimer = 0;//ÖØÖÃÊ±¼ä
+						player.hurt(15);//ç©å®¶æ‰15æ»´è¡€
+						touchTimer = 0;//é‡ç½®æ—¶é—´
 					}
 				}
 			}
@@ -150,13 +180,13 @@ int main() {
 		attackMonster(m2);
 		attackMonster(m3);
 		attackMonster(m4);
-		//ÑªÁ¿ÎªÁãÔòÓÎÏ·½áÊø
+		//è¡€é‡ä¸ºé›¶åˆ™æ¸¸æˆç»“æŸ
 		if (player.isDead()) {
 			isLose = true;
 
 		}
 
-		//Íæ¼ÒÍ¨¹ıWASD¼ü½øĞĞÒÆ¶¯
+		//ç©å®¶é€šè¿‡WASDé”®è¿›è¡Œç§»åŠ¨
 		if (GetAsyncKeyState('W') & 0x8000)
 		{
 			player.move(0, -1, map);
@@ -178,12 +208,13 @@ int main() {
 			Sleep(120);
 		}
 
-		//Êó±ê×ó¼üµã»÷ÉèÖÃ°´Å¥
+
+		//é¼ æ ‡å·¦é”®ç‚¹å‡»è®¾ç½®æŒ‰é’®
 		if (GetAsyncKeyState(VK_LBUTTON) & 0x80000)
 		{
 			POINT p;
-			GetCursorPos(&p);            // »ñÈ¡ÆÁÄ»Êó±ê×ø±ê
-			ScreenToClient(GetHWnd(), &p); // ×ª³ÉÓÎÏ·´°¿ÚÄÚ×ø±ê
+			GetCursorPos(&p);            // è·å–å±å¹•é¼ æ ‡åæ ‡
+			ScreenToClient(GetHWnd(), &p); // è½¬æˆæ¸¸æˆçª—å£å†…åæ ‡
 
 			int mx = p.x;
 			int my = p.y;
@@ -191,30 +222,32 @@ int main() {
 			if (gameUI.isClickBtn(mx, my))
 			{
 				gameUI.toggleRule();
-				Sleep(200);  // ·ÀÖ¹ÖØ¸´µã»÷
+				Sleep(200);  // é˜²æ­¢é‡å¤ç‚¹å‡»
 			}
+
+		}
 		}
 
-		setcolor(WHITE);
-		outtextxy(10, 10, L"µØÀÎÌ½ÏÕ | WASDÒÆ¶¯ | ¿Õ¸ñ¹¥»÷ | ESCÍË³ö");
+		
 
-		//ESC¼üÍË³öÓÎÏ·
+		setcolor(WHITE);
+		outtextxy(10, 10, L"åœ°ç‰¢æ¢é™© | WASDç§»åŠ¨ | ç©ºæ ¼æ”»å‡» | ESCé€€å‡º");
+
+		//ESCé”®é€€å‡ºæ¸¸æˆ
 		if (GetAsyncKeyState(VK_ESCAPE)) {
 			gameOver = true;
 		}
 
-		// ×îºó»­ÉèÖÃ°´Å¥ ¡ª¡ª ÖÃ¶¥£¬²»»á±»ÈÎºÎ¶«Î÷¸Ç×¡
+		// æœ€åç”»è®¾ç½®æŒ‰é’® â€”â€” ç½®é¡¶ï¼Œä¸ä¼šè¢«ä»»ä½•ä¸œè¥¿ç›–ä½
 		gameUI.drawSettingBtn();
-		//»­ÒôÀÖ²¥·Å°´Å¥
-		gameUI.drawMusicBtn();
 
 		FlushBatchDraw();
 		Sleep(40);
 	}
 
-	//ÍË³ö´¦Àí
+	//é€€å‡ºå¤„ç†
 	EndBatchDraw();
-	//¹Ø±ÕÍ¼ĞÎ´°¿Ú
+	//å…³é—­å›¾å½¢çª—å£
 	closegraph();
 	return 0;
 }

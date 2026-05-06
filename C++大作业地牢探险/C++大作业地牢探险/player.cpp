@@ -34,14 +34,14 @@ void Player::draw() {
 
 	//绘制玩家血条
 	setfillcolor(RED);
-	bar(SCREEN_W - 210, 10, SCREEN_W - 210 + hp * 2, 30);
+	bar(SCREEN_W- 210, 10, SCREEN_W - 210 + hp * 2, 30);
 	rectangle(SCREEN_W - 210, 10, SCREEN_W, 30);
 
 	setbkmode(TRANSPARENT);//设置文字背景透明
 	setcolor(WHITE);
 	wchar_t text[20];
 	swprintf(text, 20, L"%d/100", hp);
-	outtextxy(SCREEN_W - 110, 12, text);
+	outtextxy(SCREEN_W- 110, 6, text);
 }
 
 void Player::updateCD() {

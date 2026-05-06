@@ -7,8 +7,6 @@
 #include<windows.h>
 #include<cstdlib>
 #include<ctime>
-#include<mmsystem.h>
-
 using namespace std;
 
 // 全局常量定义
