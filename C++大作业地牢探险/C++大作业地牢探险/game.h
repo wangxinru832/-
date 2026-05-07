@@ -7,6 +7,8 @@
 #include<windows.h>
 #include<cstdlib>
 #include<ctime>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 using namespace std;
 
 // 全局常量定义
@@ -15,7 +17,7 @@ using namespace std;
 #define SCREEN_H (20 * CELL)//窗口的高度
 
 #define MAX_CHEST 5//最大宝箱数量
-#define MAX_SWORD 10//最大剑的数量
+#define MAX_SWORD 14//最大剑的数量
 
 #define FLOOR '.'//空地
 #define WALL 'W'//墙壁
@@ -31,6 +33,18 @@ extern int playerSword;//玩家当前拥有的剑的数量
 extern IMAGE loseImg;//游戏失败界面图片对象
 extern bool isLose;//游戏失败状态标记
 
+//BOSS 全局变量
+extern bool bossAppear;
+extern bool bossLive;
+extern int  bossHp;
+extern int  bossX;
+extern int  bossY;
+extern int bossTouchTimer;
+
 #define SETTING_BTN_X (SCREEN_W/2-20)//按钮X坐标
 #define SETTING_BTN_Y 8//按钮Y坐标
 #define RULE_FRAME    9999//界面一直显示直到关闭
+
+// 背景音乐函数声明
+void PlayBGM();
+void CloseBGM();

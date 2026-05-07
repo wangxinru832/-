@@ -22,11 +22,11 @@ public:
 	void takeDamage(int damage);
 
 	// 加载BOSS图片
-	void LoadBossImage();
+	void loadBossImage();
 	// 绘制BOSS
-	void DrawBoss();
+	void drawBoss();
 	// 玩家用剑攻击判定BOSS
-	void SwordHitBoss();
+	void checkSwordHitBoss(Player& p);
 };
 
 //判断玩家是否与怪物发生碰撞（是否处于同一个格子上）

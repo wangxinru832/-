@@ -59,10 +59,6 @@ void Monster::takeDamage(int damage) {
 }
 
 
-
-
-
-
 //判断玩家与怪物是否发生碰撞
 bool isCollide(Player& p, Monster& m) {
 	return(p.getX() == m.getX() && p.getY() == m.getY());
@@ -71,4 +67,64 @@ bool isCollide(Player& p, Monster& m) {
 //判断四只怪物是否全部死亡
 bool checkALLMonsterDead(Monster& m1, Monster& m2, Monster& m3, Monster& m4) {
 	return m1.isDead() && m2.isDead() && m3.isDead() && m4.isDead();
+}
+
+// ==================== BOSS 实现 ====================
+IMAGE imgBoss;
+
+void Monster::loadBossImage() {
+	loadimage(&imgBoss, _T("boss.png"), 105, 105);
+}
+
+void Monster::drawBoss() {
+	if (bossAppear && bossLive) {
+		putimage(bossX * CELL, bossY * CELL, &imgBoss);
+	}
+}
+
+void Monster::checkSwordHitBoss(Player& p) {
+	if (!bossAppear || !bossLive) return;
+
+	int px = p.getX();
+	int py = p.getY();
+
+	bool inBossArea = (px >= bossX && px <= bossX + 2 &&
+		py >= bossY && py <= bossY + 2);
+
+	if (inBossArea)
+	{
+		// 玩家按空格攻击BOSS
+		if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+		{
+			if (playerSword > 0)
+			{
+				bossHp -= 5;
+				playerSword--;
+				bossTouchTimer = 0;   // 重置接触计时
+				Sleep(200);
+			}
+		}
+		else
+		{
+			// 没攻击，计时累加
+			bossTouchTimer++;
+			// 1.5秒后玩家掉15血
+			if (bossTouchTimer >= 60)
+			{
+				p.hurt(15);
+				bossTouchTimer = 0;
+			}
+		}
+	}
+	else
+	{
+		// 离开范围清空计时
+		bossTouchTimer = 0;
+	}
+
+	// BOSS 血量归零则死亡
+	if (bossHp <= 0)
+	{
+		bossLive = false;
+	}
 }

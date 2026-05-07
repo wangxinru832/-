@@ -14,6 +14,9 @@ int main() {
 	//加载游戏失败界面图片
 	loadimage(&loseImg, _T("lose.png"), SCREEN_W, SCREEN_H);
 
+	PlayBGM();
+
+
 	BeginBatchDraw();
 	setfont(24, 0, _T("Consolas"));//设置字体
 	setbkmode(TRANSPARENT);
@@ -21,6 +24,7 @@ int main() {
 	Map map;//创建地图对象
 	map.loadWallImage();
 
+	
 	initChests();//初始化5个宝箱的位置和图片
 	initSwords();//初始化10把剑的位置和图片
 	//生成地图
@@ -40,6 +44,8 @@ int main() {
 	Monster m2(30, 6);
 	Monster m3(12, 14);
 	Monster m4(28, 15);
+
+	m1.loadBossImage();
 
 	bool gameOver = false;
 
@@ -88,10 +94,28 @@ int main() {
 			continue;
 		}
 
-		//四只怪物全死则游戏结束
-		if (!isWin && checkALLMonsterDead(m1, m2, m3, m4)) {
+
+		// ==================== BOSS 核心逻辑 ====================
+		bool allMonsterDead = checkALLMonsterDead(m1, m2, m3, m4);
+
+		// 小怪全清 → 召唤 BOSS
+		if (allMonsterDead && !bossAppear) {
+			bossAppear = true;
+			bossLive = true;
+			bossHp = 15;
+		}
+
+		// BOSS 活着 → 不能胜利
+		if (bossLive) {
+			isWin = false;
+		}
+
+		// 击败 BOSS → 真正胜利
+		if (allMonsterDead && bossAppear && !bossLive) {
 			isWin = true;
 		}
+
+
 		//如果游戏胜利的话，直接绘制游戏胜利的界面，不再走游戏界面
 		if (isWin) {
 			cleardevice();
@@ -118,6 +142,11 @@ int main() {
 		cleardevice();
 		map.draw();
 		player.draw();
+
+		// 绘制 BOSS
+		m1.drawBoss();
+		// 检测剑攻击 BOSS
+		m1.checkSwordHitBoss(player);
 
 		//4只怪物的移动+绘制
 		m1.move(map); m1.draw();
@@ -249,6 +278,9 @@ int main() {
 
 	//退出处理
 	EndBatchDraw();
+
+	CloseBGM();
+
 	//关闭图形窗口
 	closegraph();
 	return 0;
